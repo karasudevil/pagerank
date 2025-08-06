@@ -16,7 +16,7 @@ gunzip soc-LiveJournal1.txt.gz
 ./pr_benchmark.sh
 ```
 
-# 脚本相关
+## 脚本相关
 ```shell
 ./pagerank [mapper数量] [reducer数量] [节点总数] [边总数] [输入文件]
 ```

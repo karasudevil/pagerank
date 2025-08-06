@@ -8,10 +8,16 @@ class PageRank: public MapReduce {
 public:
     size_t mat_wid;
     size_t row_dis;
+    // std::vector<double> final_ranks;
     PageRank(int map_num_=1, int reduce_num_=1, size_t mat_wid_=1):
         MapReduce(map_num_, reduce_num_), mat_wid(mat_wid_){
         row_dis = mat_wid / map_num;
+        // final_ranks.resize(mat_wid);
     }
+
+    // const std::vector<double>& get_results() const {
+    //     return final_ranks;
+    // }
 
     int shuffle_func(uint64_t id) {
         // uint64_t hash = djb_hash(h);
@@ -65,8 +71,13 @@ public:
                 
             }
         }
-        // for (int i = 0; i < row_dis; i ++ ) {
-        //     printf("%lf\n", row_hmap[i]);
+        
+        // for (size_t i = 0; i < row_dis; ++i) {
+        //     // 计算全局节点ID并存入
+        //     size_t global_node_id = task_id * row_dis + i;
+        //     if (global_node_id < mat_wid) {
+        //         final_ranks[global_node_id] = row_hmap[i];
+        //     }
         // }
     }
 
@@ -93,23 +104,66 @@ public:
 
 };
 
-void simple_test(int argc, char **argv) {
+// void simple_test(int argc, char **argv) {
+//     printf("--- Running Correctness Verification Test ---\n");
 
-    char *str = (char *)malloc(8 * 8);
-    double *p_arr = (double *)str;
-    uint64_t *id_arr = (uint64_t *)str;
-    p_arr[2] = 0.5;
-    p_arr[6] = 0.4;
-    id_arr[0] = 0ULL;
-    id_arr[1] = 1ULL;
-    id_arr[3] = 1ULL;
-    id_arr[4] = 1ULL;
-    id_arr[5] = 1ULL;
-    id_arr[7] = 0ULL;
+//     // 1. 定义测试图和预期结果
+//     const int NUM_NODES = 2;
+//     const double initial_rank = 1.0 / NUM_NODES; // 初始值为 0.5
+//     std::vector<double> expected_ranks = {0.25, 0.75}; // PR(0)=0.25, PR(1)=0.75
 
-    PageRank *mp = new PageRank(2,2,2);
-    mp->run_mr(str, 8 * 8);
-}
+//     // 2. 构造符合格式的输入数据 (workload)
+//     // 记录1: [src=0, links=1, rank=0.5, dest=1] -> 4 * 8 = 32字节
+//     // 记录2: [src=1, links=2, rank=0.5, dest=0, dest=1] -> 5 * 8 = 40字节
+//     // 总大小 = 72字节
+//     const size_t workload_size = 72;
+//     char* workload = (char*)malloc(workload_size);
+//     uint64_t* mem = (uint64_t*)workload;
+
+//     // 填充记录1 (Node 0)
+//     mem[0] = 0;                         // src_id
+//     mem[1] = 1;                         // num_links
+//     ((double*)mem)[2] = initial_rank;   // pagerank_value
+//     mem[3] = 1;                         // dest_id
+
+//     // 移动指针到记录2的起始位置
+//     mem += 4; 
+
+//     // 填充记录2 (Node 1)
+//     mem[0] = 1;                         // src_id
+//     mem[1] = 2;                         // num_links
+//     ((double*)mem)[2] = initial_rank;   // pagerank_value
+//     mem[3] = 0;                         // dest_id 1
+//     mem[4] = 1;                         // dest_id 2
+
+//     // 3. 运行MapReduce任务
+//     // 使用 2个mapper, 2个reducer, 总节点数2
+//     PageRank *mp = new PageRank(2, 2, NUM_NODES);
+//     mp->run_mr(workload, workload_size);
+
+//     // 4. 获取结果并进行验证
+//     const auto& actual_ranks = mp->get_results();
+//     bool passed = true;
+//     double epsilon = 1e-9; // 用于浮点数比较的容差
+
+//     printf("\n--- Verification Results ---\n");
+//     for (int i = 0; i < NUM_NODES; ++i) {
+//         printf("Node %d: Expected = %lf, Actual = %lf\n", i, expected_ranks[i], actual_ranks[i]);
+//         if (std::fabs(expected_ranks[i] - actual_ranks[i]) > epsilon) {
+//             passed = false;
+//         }
+//     }
+
+//     if (passed) {
+//         printf("\n[SUCCESS] Test Passed!\n");
+//     } else {
+//         printf("\n[FAILURE] Test Failed!\n");
+//     }
+
+//     // 5. 清理内存
+//     free(workload);
+//     delete mp;
+// }
 
 void stress_test(int argc, char **argv) {
 

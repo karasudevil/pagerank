@@ -13,6 +13,7 @@ gunzip soc-LiveJournal1.txt.gz
 
 运行脚本
 ```shell
+make
 ./pr_benchmark.sh
 ```
 

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <cstring>
 
 class PageRank: public MapReduce {
 public:

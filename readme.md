@@ -10,7 +10,7 @@ apt install gzip
 gunzip soc-LiveJournal1.txt.gz
 ```
 测试使用的是CXL-SHM里提供的数据集，之后~~换成ATLAS pagerank里的数据集应该也没问题~~。  
-ATLAS的数据集在原论文的主页上已经404了，替换为http://twitter.mpi-sws.org/links-anon.txt.gz，包含1,963,263,821条边，54,981,152个点。脚本中设置的数据集是soc-LiveJournal1，如果替换则需要修改节点总数和边总数。
+ATLAS的数据集在原论文的主页上已经404了，替换为http://twitter.mpi-sws.org/links-anon.txt.gz ，包含1,963,263,821条边，54,981,152个点。脚本中设置的数据集是soc-LiveJournal1，如果替换则需要修改节点总数和边总数。
 
 运行脚本
 ```shell

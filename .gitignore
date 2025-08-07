@@ -2,3 +2,4 @@ pagerank
 dataset/
 err.txt
 pr.txt
+.DS_Store

@@ -30,6 +30,7 @@ public:
         uint64_t *mat_data = (uint64_t *)map_data;
         // printf("%p\n", map_data);
         size_t mat_data_len = data_length / sizeof(uint64_t);
+	printf("%d\n", mat_data_len);
         size_t index = 0;
         while (index < mat_data_len) {
             uint64_t *current_record = mat_data + index;
@@ -92,18 +93,23 @@ public:
         size_t pre_index = 0;
         // int counter = 0;
         int phase = 0;
-        while (index < mat_data_len) {
+        while (index < mat_data_len && phase < map_num - 1) {
             uint64_t src = mat_data[index];
             size_t row_len = mat_data[index + 1];
             // counter ++;
             index += row_len + 3;
-            if (src / row_dis == phase && src / row_dis != map_num) {
+            if (src / row_dis != phase ) {
                 data_dis[phase] = (index - pre_index) * sizeof(uint64_t);
                 data_arr[phase] = map_data + pre_index * sizeof(uint64_t);
                 pre_index = index;
                 phase ++;
+		printf("%ld\n", src);
             }
         }
+	if (pre_index < mat_data_len) {
+	    data_dis[map_num - 1] = (mat_data_len - pre_index) * sizeof(uint64_t);
+	    data_arr[map_num - 1] = map_data + pre_index * sizeof(uint64_t);
+	}
     }
 
 };

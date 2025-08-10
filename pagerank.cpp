@@ -91,6 +91,7 @@ public:
         size_t mat_data_len = data_length / sizeof(uint64_t);
         size_t index = 0;
         size_t pre_index = 0;
+	size_t arrange_dis = mat_data_len / map_num;
         // int counter = 0;
         int phase = 0;
         while (index < mat_data_len && phase < map_num - 1) {
@@ -98,7 +99,7 @@ public:
             size_t row_len = mat_data[index + 1];
             // counter ++;
             index += row_len + 3;
-            if (src / row_dis != phase ) {
+            if (index / arrange_dis != phase ) {
                 data_dis[phase] = (index - pre_index) * sizeof(uint64_t);
                 data_arr[phase] = map_data + pre_index * sizeof(uint64_t);
                 pre_index = index;

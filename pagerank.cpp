@@ -33,25 +33,26 @@ public:
 	    printf("%ld\n", mat_data_len);
         size_t index = 0;
         while (index < mat_data_len) {
-            uint64_t *current_record = mat_data + index;
-            size_t row_len = current_record[1];
-            uint64_t src_id = current_record[0];
             
-            double current_rank = *((double*)(current_record + 2));
-            double p_val_to_emit = (row_len > 0) ? (current_rank / row_len) : 0;
-            uint64_t *dest_ids = current_record + 3;
+            size_t row_len = *(mat_data + 1);
+            size_t src_id = *(mat_data);
+            mat_data += 2;
+            double *P = (double *)mat_data;
+            *P = *P / row_len;
+            mat_data += 1;
+           
             if (row_len > 875712) {
                 printf("[D]%ld\n", row_len);
             }
 
             for (int i = 0; i < row_len; i ++ ) {
-                uint64_t dest_id = dest_ids[i];
-                int reduce_id = shuffle_func(current_record[i + 3]);
+                
+                int reduce_id = shuffle_func(mat_data[i]);
                 // printf("%d %d %d %d\n", row_len, task_id,  reduce_id, mat_data[i]);
                 emit_intermediate(vec->at(get_vec_index(task_id, reduce_id)),  \
-                    (char *)&dest_id , sizeof(uint64_t));
+                    (char *)mat_data , sizeof(uint64_t));
                 emit_intermediate(vec->at(get_vec_index(task_id, reduce_id)),  \
-                    (char *)&p_val_to_emit, sizeof(double)); 
+                    (char *)P, sizeof(double)); 
             }
             index += row_len + 3;
         }

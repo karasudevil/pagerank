@@ -30,7 +30,7 @@ public:
         uint64_t *mat_data = (uint64_t *)map_data;
         // printf("%p\n", map_data);
         size_t mat_data_len = data_length / sizeof(uint64_t);
-	printf("%d\n", mat_data_len);
+	    printf("%ld\n", mat_data_len);
         size_t index = 0;
         while (index < mat_data_len) {
             uint64_t *current_record = mat_data + index;
@@ -46,7 +46,7 @@ public:
 
             for (int i = 0; i < row_len; i ++ ) {
                 uint64_t dest_id = dest_ids[i];
-                int reduce_id = shuffle_func(mat_data[i]);
+                int reduce_id = shuffle_func(current_record[i + 3]);
                 // printf("%d %d %d %d\n", row_len, task_id,  reduce_id, mat_data[i]);
                 emit_intermediate(vec->at(get_vec_index(task_id, reduce_id)),  \
                     (char *)&dest_id , sizeof(uint64_t));
@@ -86,12 +86,12 @@ public:
         // }
     }
 
-    void splice(char **data_arr, size_t *data_dis, char *map_data, int data_length) {
+    void splice(char **data_arr, size_t *data_dis, char *map_data, size_t data_length) {
         uint64_t *mat_data = (uint64_t *)map_data;
         size_t mat_data_len = data_length / sizeof(uint64_t);
         size_t index = 0;
         size_t pre_index = 0;
-	size_t arrange_dis = mat_data_len / map_num;
+	    size_t arrange_dis = mat_data_len / map_num;
         // int counter = 0;
         int phase = 0;
         while (index < mat_data_len && phase < map_num - 1) {
@@ -104,7 +104,7 @@ public:
                 data_arr[phase] = map_data + pre_index * sizeof(uint64_t);
                 pre_index = index;
                 phase ++;
-		printf("%ld\n", src);
+		        printf("%ld\n", src);
             }
         }
 	if (pre_index < mat_data_len) {
@@ -198,6 +198,7 @@ void stress_test(int argc, char **argv) {
     }
 
     size_t length = ((max_id * 3) + line_num) * sizeof(uint64_t);
+    printf("%ld", length);
     char *workload = nullptr;
     posix_memalign((void **)&workload, 4096, length);
     uint64_t *mem = (uint64_t *)workload;
@@ -212,6 +213,7 @@ void stress_test(int argc, char **argv) {
         }
         mem += item_len + 3;
     }
+    delete[] arr;
 
     PageRank *pr = new PageRank(map_num, reduce_num, max_id);
     pr->run_mr(workload, length);

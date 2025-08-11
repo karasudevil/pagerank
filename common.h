@@ -15,7 +15,7 @@
 
 struct map_parameter {
     void *map_data;
-    int length;
+    size_t length;
     int task_id;
 };
 
@@ -99,7 +99,7 @@ public:
         return;
     }
 
-    void run_mr(char *map_data, int data_length) {
+    void run_mr(char *map_data, size_t data_length) {
         printf("[Mapper] %d, [Reducer]%d\n", map_num, reduce_num);
         std::vector<std::thread *> map_threads, reduce_threads;
     

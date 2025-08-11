@@ -40,7 +40,7 @@ public:
             double *P = (double *)mat_data;
             *P = *P / row_len;
             mat_data += 1;
-           
+            if(row_len > 550000) printf("wrong row_len : %ld\n", row_len);
 
             for (int i = 0; i < row_len; i ++ ) {
                 
@@ -52,6 +52,7 @@ public:
                     (char *)P, sizeof(double)); 
             }
             index += row_len + 3;
+            mat_data += row_len;
         }
                 // printf("Map %d Reduce %d: %s\n", task_id, reduce_id, word);
     }
@@ -96,6 +97,7 @@ public:
         while (index < mat_data_len && phase < map_num - 1) {
             uint64_t src = mat_data[index];
             size_t row_len = mat_data[index + 1];
+            if(row_len > 550000) printf("Error row_len : %ld\n", row_len);
             // counter ++;
             index += row_len + 3;
             if (index / arrange_dis != phase ) {

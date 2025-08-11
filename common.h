@@ -54,11 +54,11 @@ public:
     }
     ~MapReduce() {}
 
-    virtual void map_func(void *map_data, int task_id,  int data_length){};
+    virtual void map_func(void *map_data, int task_id,  size_t data_length){};
 
     virtual void reduce_func(int task_id){};
 
-    virtual void splice(char **data_arr, size_t *data, char *map_data, int data_length) {};
+    virtual void splice(char **data_arr, size_t *data, char *map_data, size_t data_length) {};
 
     void emit_intermediate(std::list<imm_data> *inter, char *data, int len) {
         if (inter->empty() || inter->back().count + len + 1 > imm_data_size) {
@@ -78,7 +78,7 @@ public:
         struct map_parameter *para = (struct map_parameter*)arg;
         int task_id = para->task_id;
         void *data = para->map_data;
-        int data_length = para->length;
+        size_t data_length = para->length;
         // cxl_shm *shm = para->shm;
     
         
@@ -106,6 +106,7 @@ public:
 
         char **map_data_arr = (char **)malloc(sizeof(char *) * map_num);
         size_t *map_data_dis = (size_t *)malloc(sizeof(size_t) * map_num);
+        printf("%ld\n", data_length); 
         splice(map_data_arr, map_data_dis, map_data, data_length);
         // map_threads = new std::thread[map_num];
         // reduce_threads = new std::thread[reduce_num];

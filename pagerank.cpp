@@ -26,7 +26,7 @@ public:
         return (id / row_dis) % map_num;
     }
 
-    void map_func(void *map_data, int task_id,  int data_length) {
+    void map_func(void *map_data, int task_id,  size_t data_length) {
         uint64_t *mat_data = (uint64_t *)map_data;
         // printf("%p\n", map_data);
         size_t mat_data_len = data_length / sizeof(uint64_t);
@@ -41,9 +41,6 @@ public:
             *P = *P / row_len;
             mat_data += 1;
            
-            if (row_len > 875712) {
-                printf("[D]%ld\n", row_len);
-            }
 
             for (int i = 0; i < row_len; i ++ ) {
                 
@@ -89,12 +86,13 @@ public:
 
     void splice(char **data_arr, size_t *data_dis, char *map_data, size_t data_length) {
         uint64_t *mat_data = (uint64_t *)map_data;
-        size_t mat_data_len = data_length / sizeof(uint64_t);
+        uint64_t mat_data_len = data_length / sizeof(uint64_t);
         size_t index = 0;
         size_t pre_index = 0;
 	    size_t arrange_dis = mat_data_len / map_num;
         // int counter = 0;
         int phase = 0;
+	printf("%ld,%ld\n", arrange_dis, mat_data_len);
         while (index < mat_data_len && phase < map_num - 1) {
             uint64_t src = mat_data[index];
             size_t row_len = mat_data[index + 1];
@@ -201,12 +199,15 @@ void stress_test(int argc, char **argv) {
     size_t length = ((max_id * 3) + line_num) * sizeof(uint64_t);
     printf("%ld", length);
     char *workload = nullptr;
-    posix_memalign((void **)&workload, 4096, length);
+    int ret = posix_memalign((void **)&workload, 4096, length);
+    if(ret != 0) printf("mem allocate wrong");
     uint64_t *mem = (uint64_t *)workload;
+    int max_size = 0;
 
     for (int i = 0; i < max_id; i ++ ) {
         mem[0] = i;
         int item_len = arr[i].size();
+        if(max_size < item_len) max_size = item_len;
         mem[1] = item_len;
         ((double *)mem)[2] = 0.0; //1.0 * (rand() % 100) / 100;
         for (int j = 0; j < item_len; j ++ ) {
@@ -214,7 +215,7 @@ void stress_test(int argc, char **argv) {
         }
         mem += item_len + 3;
     }
-    delete[] arr;
+    printf("max out edge is %d\n", max_size);
 
     PageRank *pr = new PageRank(map_num, reduce_num, max_id);
     pr->run_mr(workload, length);

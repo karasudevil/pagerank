@@ -78,13 +78,13 @@ Pagerank 算法需要一个以有向边列表为格式的图数据集。可以�
 
 #### **推荐方式：使用脚本**
 
-项目提供了一个便捷的运行脚本 `pr_benchmark.sh`。您只需提供 mapper/reducer 的数量即可。
+项目提供了一个便捷的运行脚本 `pr_benchmark.sh`。只需提供 mapper/reducer 的数量即可。
 
 ```shell
 # 示例：使用 8 个 mapper/reducer
-./pr_benchmark.sh 8
+./pr_benchmark.sh 2
 ```
-*注意：此脚本默认使用了预处理好的数据集路径和参数，您可能需要根据实际情况修改脚本内容。*
+*注意：此脚本默认使用了预处理好的数据集路径和参数，可能需要根据实际情况修改脚本内容。*
 
 #### **手动执行**
 
@@ -92,7 +92,7 @@ Pagerank 算法需要一个以有向边列表为格式的图数据集。可以�
 
 ```shell
 # 语法: ./pagerank [mapper数量] [reducer数量] [节点总数] [边总数] [输入文件]
-./pagerank 8 8 32668489 1000000000 ./dataset/links-preprocessed.txt
+./pagerank 2 2 32668489 1000000000 ./dataset/links-preprocessed.txt
 ```
 
 **参数说明:**

@@ -3,6 +3,9 @@
 这是一个内存密集型的 PageRank 基准测试程序，修改自 [hhyx/CXL-SHM](https://github.com/hhyx/CXL-SHM) 中的 pagerank benchmark。
 
 此项目的主要功能是读取一个大型有向图（以边列表形式），并对所有节点执行一次模拟的 pagerank 迭代（即对每个节点的 PageRank 值进行一次除法计算）。由于其需要将整个图结构和节点数据载入内存，因此它是一个内存密集型的 benchmark。
+## 相关文档
+[Fastswap实验](https://jianmucloud.feishu.cn/wiki/PwJUwNtW8i3S4Mkci1xc4sFynsc)
+[Fastswap实验数据](https://jianmucloud.feishu.cn/wiki/ONTZwbsyzixPSOkBPR1c8uQynEg)
 
 ## 主要特性
 

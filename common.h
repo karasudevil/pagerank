@@ -124,6 +124,7 @@ public:
         for (int i = 0; i < map_num; i ++ ) {
             map_threads[i]->join();
         }
+	auto mid = std::chrono::system_clock::now();
         for (int i = 0; i < reduce_num; i++ ) {
             reduce_parameter *rd = new reduce_parameter();
             rd->task_id = i;
@@ -135,7 +136,11 @@ public:
 
         auto end = std::chrono::system_clock::now();  
         std::chrono::duration<double> diff = end-start;
+	std::chrono::duration<double> mapper = mid - start;
+	std::chrono::duration<double> reducer = end - mid;
 		printf("[TIME]%lf\n", diff.count());
+		printf("[MAPPER TIME]%lf\n",mapper.count());
+		printf("[REDUCER TIME]%lf\n",reducer.count());
     }
 };
 

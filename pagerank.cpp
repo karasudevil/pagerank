@@ -27,6 +27,7 @@ public:
     }
 
     void map_func(void *map_data, int task_id,  size_t data_length) {
+	auto start = std::chrono::system_clock::now();
         uint64_t *mat_data = (uint64_t *)map_data;
         // printf("%p\n", map_data);
         size_t mat_data_len = data_length / sizeof(uint64_t);
@@ -54,6 +55,9 @@ public:
             index += row_len + 3;
             mat_data += row_len;
         }
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<double> duration = end-start;
+	printf("[Mapper %d TIME]%lf\n",task_id,duration.count());
                 // printf("Map %d Reduce %d: %s\n", task_id, reduce_id, word);
     }
     
